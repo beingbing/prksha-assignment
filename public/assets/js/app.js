@@ -65,8 +65,6 @@ app.controller("chatCtrl", ['$scope', 'socket', 'randomColor', 'userService', 'l
         var newArray = oldUsers.filter(function (value) {
             return Object.keys(value).length !== 0;
         });
-        console.log('oldUsers', oldUsers);
-        console.log('newArray', newArray);
         newArray.forEach(element => {
             if (element && element.nickname && element.nickname !== "") {
                 socket.emit("addUser", { nickname: element.nickname, color: element.color });
