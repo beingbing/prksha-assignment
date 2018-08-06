@@ -58,6 +58,24 @@ app.factory('userService', function ($rootScope, $window, localStorageService) {
 app.controller("chatCtrl", ['$scope', 'socket', 'randomColor', 'userService', 'localStorageService', function ($scope, socket, randomColor, userService, localStorageService) {
     var messageWrapper = $('.message-wrapper');
     $scope.hasLogined = false;
+
+    var oldUsers = localStorageService.get('users');
+
+    if (oldUsers && oldUsers.length > 0) {
+        var newArray = oldUsers.filter(function (value) {
+            return Object.keys(value).length !== 0;
+        });
+        console.log('oldUsers', oldUsers);
+        console.log('newArray', newArray);
+        newArray.forEach(element => {
+            if (element && element.nickname && element.nickname !== "") {
+                socket.emit("addUser", { nickname: element.nickname, color: element.color });
+            }
+        });
+        $scope.hasLogined = true;
+        socket.emit("addUser", { nickname: $scope.nickname, color: $scope.color });
+    }
+
     $scope.receiver = "";//the default is group chat
     $scope.publicMessages = [];//group chat message
     $scope.privateMessages = {};//private message
